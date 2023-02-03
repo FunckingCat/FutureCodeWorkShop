@@ -1,27 +1,30 @@
 package org.module.two.domen;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class WorkShop {
 
-    private static String[] NAMES = {"Бориска", "Костик", "Светочка", "Геннадий"};
+    private static final String[] NAMES = {"Бориска", "Костик", "Светочка", "Геннадий"};
 
-    private String name;
-    private int maxCapacity;
-    private Worker[] workers;
-    private Car[] cars;
+    private final String name;
+    private final int maxCapacity;
+    private final List<Worker> workers;
+    private final Map<Car, Long> cars;
 
     public WorkShop(String name, int maxCapacity) {
         this.name = name;
         this.maxCapacity = maxCapacity;
-        this.workers = new Worker[0];
-        this.cars = new Car[0];
+        this.workers = new ArrayList<>();
+        this.cars = new HashMap<>();
 
         int workersAmount = ThreadLocalRandom.current().nextInt(0, 4) + 1;
-        workers = new Worker[workersAmount];
         for (int i = 0; i < workersAmount; i++) {
-            workers[i] = new Worker(NAMES[i]);
+            workers.add(new Worker(NAMES[i]));
         }
     }
 
@@ -30,8 +33,8 @@ public class WorkShop {
         return "WorkShop{name='%s', maxCapacity=%d, \nworkers=%s, \ncars=%s}"
                 .formatted(name,
                         maxCapacity,
-                        Arrays.toString(workers),
-                        Arrays.toString(cars));
+                        workers,
+                        cars);
     }
 
     public void acceptCustomer(Client client) {
@@ -70,9 +73,22 @@ public class WorkShop {
     }
 
     private void addNewCar(Car car) {
-        Car[] newCars = new Car[cars.length + 1];
-        System.arraycopy(cars, 0, newCars, 0, cars.length);
-        newCars[newCars.length - 1] = car;
-        cars = newCars;
+        if (!cars.containsKey(car))
+            cars.put(car, ThreadLocalRandom.current().nextLong(2, 10));
+    }
+
+    public Boolean allCarsRepaired() {
+        Long sum = 0L;
+        for (Long brokenness : cars.values())
+            sum += brokenness;
+        return sum <= 0;
+    }
+
+    public void repairCars() {
+        for (Worker worker : workers) {
+            for (Car car : cars.keySet()) {
+                cars.put(car, cars.get(car) - worker.doWork());
+            }
+        }
     }
 }

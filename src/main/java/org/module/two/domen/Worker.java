@@ -1,13 +1,14 @@
 package org.module.two.domen;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class Worker {
 
-    private static Integer TIME_TO_REPAIR_CAR = 5;
+    private static final Integer EFFECT = 2;
 
-    private String name;
-    private String[] carModelsListAvalibleToRepair;
+    private final String name;
+    private List<String> carModelsListAvalibleToRepair;
 
     private Boolean workingNow;
     private Car carRepairing;
@@ -20,7 +21,7 @@ public class Worker {
     @Override
     public String toString() {
         return "Рабочий{name='%s', %s, workingNow=%s, %s}"
-                .formatted(name, Arrays.toString(carModelsListAvalibleToRepair), workingNow, carRepairing);
+                .formatted(name, carModelsListAvalibleToRepair, workingNow, carRepairing);
     }
 
     public Car getCarRepairing() {
@@ -37,5 +38,10 @@ public class Worker {
 
     public void setWorkingNow(Boolean workingNow) {
         this.workingNow = workingNow;
+    }
+
+    public Integer doWork() {
+        System.out.println(name + ": Чиню е мае");
+        return EFFECT;
     }
 }
