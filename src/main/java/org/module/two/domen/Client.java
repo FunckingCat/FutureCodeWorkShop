@@ -1,16 +1,18 @@
 package org.module.two.domen;
 
-public class Client {
-    private String name;
+import javax.xml.transform.Source;
+
+public class Client extends Person {
     private Car car;
 
     public Client(String name, Car car) {
+
+        super(name);
 
         if (car == null) {
             throw new RuntimeException("Car cant be null");
         }
 
-        this.name = name;
         this.car = car;
 
     }
@@ -23,7 +25,9 @@ public class Client {
         return car;
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public void announce() {
+//        super.announce();
+        System.out.println("Client " + name);
     }
 }
